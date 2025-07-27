@@ -1,12 +1,55 @@
-[gd_scene format=3 uid="uid://evvpyby52oj1"]
+[gd_scene load_steps=5 format=3 uid="uid://evvpyby52oj1"]
+
+[ext_resource type="PackedScene" uid="uid://bjvjuaolw3obn" path="res://scenes/characters/character_scene.tscn" id="1_pu738"]
+[ext_resource type="Script" uid="uid://bdl7io0g3qiny" path="res://scenes/battle/battle_scene.gd" id="1_ugm31"]
+[ext_resource type="Resource" uid="uid://c88jwd6aaub3t" path="res://resources/characters-data/player-hero-data.tres" id="2_ugm31"]
+[ext_resource type="Resource" uid="uid://f6kxqkrw13hs" path="res://resources/characters-data/enemy-goblin-data.tres" id="3_o3k7m"]
 
 [node name="BattleScene" type="Node2D"]
+script = ExtResource("1_ugm31")
 
-[node name="Background" type="Sprite2D" parent="."]
+[node name="BattleUI" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="ActionPanel" type="Panel" parent="BattleUI"]
+unique_name_in_owner = true
+offset_left = 33.0
+offset_top = 555.0
+offset_right = 233.0
+offset_bottom = 595.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BattleUI/ActionPanel"]
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 40.0
+alignment = 1
+
+[node name="AttackButton" type="Button" parent="BattleUI/ActionPanel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Attack"
+
+[node name="DefendButton" type="Button" parent="BattleUI/ActionPanel/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Defend"
+
+[node name="InfoLabel" type="RichTextLabel" parent="BattleUI"]
+unique_name_in_owner = true
+offset_left = 902.0
+offset_top = -2.0
+offset_right = 1152.0
+offset_bottom = 198.0
+bbcode_enabled = true
 
 [node name="PlayerTeamArea" type="Node2D" parent="."]
 
+[node name="CharacterScene" parent="PlayerTeamArea" instance=ExtResource("1_pu738")]
+position = Vector2(244, 339)
+character_data = ExtResource("2_ugm31")
+
 [node name="EnemyTeamArea" type="Node2D" parent="."]
 
-[node name="BattleUI" type="CanvasLayer" parent="."]
-layer = 64
+[node name="CharacterScene" parent="EnemyTeamArea" instance=ExtResource("1_pu738")]
+position = Vector2(791, 343)
+character_data = ExtResource("3_o3k7m")

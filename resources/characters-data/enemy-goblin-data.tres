@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://f6kxqkrw13hs"]
+
+[ext_resource type="Script" uid="uid://88hyr5offq07" path="res://scripts/resources/character-data.gd" id="1_loxyt"]
+
+[resource]
+script = ExtResource("1_loxyt")
+character_name = "哥布林"
+description = "角色描述"
+max_hp = 80
+current_hp = 80
+max_mp = 0
+current_mp = 0
+attack = 4
+defense = 2
+speed = 3
+color = Color(0, 0, 1, 1)
+metadata/_custom_type_script = "uid://88hyr5offq07"

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://c88jwd6aaub3t"]
+
+[ext_resource type="Script" uid="uid://88hyr5offq07" path="res://scripts/resources/character-data.gd" id="1_gm6mb"]
+
+[resource]
+script = ExtResource("1_gm6mb")
+character_name = "林月冥"
+description = "角色描述"
+max_hp = 100
+current_hp = 100
+max_mp = 50
+current_mp = 50
+attack = 10
+defense = 5
+speed = 7
+color = Color(0, 0, 1, 1)
+metadata/_custom_type_script = "uid://88hyr5offq07"
