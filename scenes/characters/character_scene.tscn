@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjvjuaolw3obn"]
+[gd_scene load_steps=3 format=3 uid="uid://bjvjuaolw3obn"]
 
 [ext_resource type="Script" uid="uid://qwyjipm5ctht" path="res://scenes/characters/character.gd" id="1_wj0aa"]
+[ext_resource type="PackedScene" uid="uid://iyhelodieyih" path="res://scenes/UI/defense_indicator.tscn" id="2_lv1ak"]
 
 [node name="CharacterScene" type="Node2D"]
 script = ExtResource("1_wj0aa")
@@ -12,6 +13,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="NameLabel" type="Label" parent="Container"]
+unique_name_in_owner = true
 layout_mode = 2
 offset_right = 100.0
 offset_bottom = 23.0
@@ -19,17 +21,31 @@ text = "人物名"
 horizontal_alignment = 1
 
 [node name="CharacterRect" type="ColorRect" parent="Container"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = -1.0
 offset_top = 24.0
 offset_right = 99.0
 offset_bottom = 144.0
 
-[node name="HPLabel" type="Label" parent="Container"]
+[node name="HPBar" type="ProgressBar" parent="Container"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 144.0
+offset_right = 100.0
+offset_bottom = 171.0
+show_percentage = false
+
+[node name="HPLabel" type="Label" parent="Container/HPBar"]
+unique_name_in_owner = true
 layout_mode = 2
-offset_left = -1.0
-offset_top = 145.0
-offset_right = 99.0
-offset_bottom = 168.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 101.0
+offset_bottom = 25.0
 text = "血量"
 horizontal_alignment = 1
+
+[node name="DefenseIndicator" parent="." instance=ExtResource("2_lv1ak")]
+unique_name_in_owner = true
+position = Vector2(2, 2)

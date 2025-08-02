@@ -1,5 +1,7 @@
 extends Node2D
 
+const DAMAGE_NUMBER_SCENE: PackedScene = preload("res://scenes/UI/damage_number.tscn")
+
 # UI引用
 @onready var attack_button: Button = %AttackButton
 @onready var defend_button: Button = %DefendButton
@@ -25,9 +27,7 @@ var is_victory: bool = false         # 战斗结果是否为胜利
 
 func _ready():
 	attack_button.pressed.connect(_on_attack_button_pressed)
-	defend_button.pressed.connect(func (): 
-		print("defend")
-	)
+	defend_button.pressed.connect(_on_defend_button_pressed)
 	# 注册战斗场景中的角色
 	find_characters()
 	# 启动战斗
@@ -97,9 +97,13 @@ func _on_attack_button_pressed():
 				break
 		if target:
 			player_select_action("attack", target)
+			
+func _on_defend_button_pressed():
+	if  is_player_turn and not battle_finished: 
+		player_select_action("defend", current_turn_character)
 
 # 处理玩家行动
-func player_select_action(action_type: String, target: Character): 
+func player_select_action(action_type: String, target: Character = null): 
 	if not is_player_turn or battle_finished:
 		return
 	print("玩家选择行动：", action_type)
@@ -134,6 +138,10 @@ func player_select_action(action_type: String, target: Character):
 # 执行攻击
 func execute_attack(attacker: Character, target: Character):
 	update_battle_info("[color=purple][战斗行动][/color] [color=orange][b]{0}[/b][/color] 攻击 [color=cyan][b]{1}[/b][/color]".format([attacker.character_data.character_name, target.character_data.character_name]))
+	var final_damage = target.take_damage(attacker.character_data.attack - target.character_data.defense)
+	#显示伤害数字
+	spawn_damage_number(target.global_position, final_damage, Color.RED)
+	
 	# 检查战斗是否结束
 	check_battle_end_condition()
 	
@@ -142,8 +150,8 @@ func execute_defend(character: Character):
 	if character == null:
 		return
 		
-	update_battle_info("[color=purple][战斗行动][/color] [color=cyan][b]{0}[/b][/color] 选择[color=teal][防御][/color]，受到的伤害将减少".format([character.character_name]))
-	# TODO: 实现防御逻辑，可能是添加临时buff或设置状态
+	update_battle_info("[color=purple][战斗行动][/color] [color=cyan][b]{0}[/b][/color] 选择[color=teal][防御][/color]，受到的伤害将减少".format([character.character_data.character_name]))
+	character.set_defending(true)
 
 # 检查战斗结束条件
 func check_battle_end_condition() -> bool:
@@ -257,3 +265,9 @@ func end_battle(is_win: bool):
 	
 	# 发出战斗结束信号
 	emit_signal("battle_ended", is_win)
+
+func spawn_damage_number(position: Vector2, amount: int, color: Color):
+	var damage_number = DAMAGE_NUMBER_SCENE.instantiate()
+	get_parent().add_child(damage_number)
+	damage_number.global_position = position + Vector2(0, -50)
+	damage_number.show_number(str(amount), color)

@@ -47,11 +47,9 @@ bbcode_enabled = true
 [node name="CharacterScene" parent="PlayerTeamArea" instance=ExtResource("1_pu738")]
 position = Vector2(244, 339)
 character_data = ExtResource("2_ugm31")
-maximum_hp = 100
 
 [node name="EnemyTeamArea" type="Node2D" parent="."]
 
 [node name="CharacterScene" parent="EnemyTeamArea" instance=ExtResource("1_pu738")]
 position = Vector2(791, 343)
 character_data = ExtResource("3_o3k7m")
-maximum_hp = 80
