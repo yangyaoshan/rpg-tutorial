@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://evvpyby52oj1"]
+[gd_scene load_steps=7 format=3 uid="uid://evvpyby52oj1"]
 
 [ext_resource type="PackedScene" uid="uid://bjvjuaolw3obn" path="res://scenes/characters/character_scene.tscn" id="1_pu738"]
 [ext_resource type="Script" uid="uid://bdl7io0g3qiny" path="res://scenes/battle/battle_scene.gd" id="1_ugm31"]
 [ext_resource type="Resource" uid="uid://c88jwd6aaub3t" path="res://resources/characters-data/player-hero-data.tres" id="2_ugm31"]
 [ext_resource type="Resource" uid="uid://f6kxqkrw13hs" path="res://resources/characters-data/enemy-goblin-data.tres" id="3_o3k7m"]
+[ext_resource type="Script" uid="uid://ovtmfytgx4or" path="res://scenes/battle/battle_manager.gd" id="5_o3k7m"]
+[ext_resource type="Script" uid="uid://dulhbfmq1l0km" path="res://scenes/battle/battle_state_manager.gd" id="6_lbt8a"]
 
 [node name="BattleScene" type="Node2D"]
 script = ExtResource("1_ugm31")
@@ -55,3 +57,10 @@ maximum_hp = 100
 position = Vector2(791, 343)
 character_data = ExtResource("3_o3k7m")
 maximum_hp = 80
+
+[node name="BattleManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_o3k7m")
+
+[node name="BattleStateManager" type="Node" parent="BattleManager"]
+script = ExtResource("6_lbt8a")
