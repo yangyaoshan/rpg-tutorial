@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://1jpcnfpy751f"]
+
+[ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="1_4yj5e"]
+
+[resource]
+script = ExtResource("1_4yj5e")
+skill_id = &"minor-heal"
+skill_name = "初级治疗"
+description = "回复一个目标20点生命值"
+mp_cost = 5
+effect_type = 0
+target_type = 1
+power = 10
+metadata/_custom_type_script = "uid://dh0rtnsbdrr2v"

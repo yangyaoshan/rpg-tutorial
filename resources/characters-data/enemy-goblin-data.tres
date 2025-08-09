@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://f6kxqkrw13hs"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3 uid="uid://f6kxqkrw13hs"]
 
 [ext_resource type="Script" uid="uid://88hyr5offq07" path="res://scripts/resources/character-data.gd" id="1_loxyt"]
+[ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="2_4vmbd"]
 
 [resource]
 script = ExtResource("1_loxyt")
@@ -13,5 +14,6 @@ current_mp = 0
 attack = 8
 defense = 2
 speed = 3
+skills = Array[ExtResource("2_4vmbd")]([])
 color = Color(0, 1, 0.316667, 1)
 metadata/_custom_type_script = "uid://88hyr5offq07"

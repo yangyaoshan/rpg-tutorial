@@ -1,6 +1,9 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://c88jwd6aaub3t"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://c88jwd6aaub3t"]
 
 [ext_resource type="Script" uid="uid://88hyr5offq07" path="res://scripts/resources/character-data.gd" id="1_gm6mb"]
+[ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="2_kcit7"]
+[ext_resource type="Resource" uid="uid://bofqvummenvgy" path="res://resources/skills/fire-ball.tres" id="3_utvw1"]
+[ext_resource type="Resource" uid="uid://1jpcnfpy751f" path="res://resources/skills/minor-heal.tres" id="4_4libw"]
 
 [resource]
 script = ExtResource("1_gm6mb")
@@ -13,5 +16,6 @@ current_mp = 50
 attack = 10
 defense = 2
 speed = 7
+skills = Array[ExtResource("2_kcit7")]([ExtResource("3_utvw1"), ExtResource("4_4libw")])
 color = Color(0, 0, 1, 1)
 metadata/_custom_type_script = "uid://88hyr5offq07"

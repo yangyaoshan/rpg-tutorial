@@ -13,8 +13,11 @@ class_name CharacterData
 @export var defense: int = 5
 @export var speed: int = 7
 
+@export_group("技能列表")
+@export var skills: Array[SkillData] = []
+
 @export_group("视觉表现")
-@export var color: Color = Color.BLUE  # 为原型阶段设置的角色颜色
+@export var color: Color = Color.BLUE # 为原型阶段设置的角色颜色
 
 # 辅助函数
 func reset_stats():

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://bofqvummenvgy"]
+
+[ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="1_biwpa"]
+
+[resource]
+script = ExtResource("1_biwpa")
+skill_id = &"fire-ball"
+skill_name = "火球术"
+description = "向敌人投掷一个火球，造成15点火焰伤害"
+mp_cost = 8
+effect_type = 0
+target_type = 1
+power = 10
+metadata/_custom_type_script = "uid://dh0rtnsbdrr2v"

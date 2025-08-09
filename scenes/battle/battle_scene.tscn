@@ -1,9 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://evvpyby52oj1"]
+[gd_scene load_steps=10 format=3 uid="uid://evvpyby52oj1"]
 
 [ext_resource type="PackedScene" uid="uid://bjvjuaolw3obn" path="res://scenes/characters/character_scene.tscn" id="1_pu738"]
 [ext_resource type="Script" uid="uid://bdl7io0g3qiny" path="res://scenes/battle/battle_scene.gd" id="1_ugm31"]
+[ext_resource type="PackedScene" uid="uid://c1pc4s8seasdx" path="res://scenes/UI/action_menu.tscn" id="2_cywj5"]
 [ext_resource type="Resource" uid="uid://c88jwd6aaub3t" path="res://resources/characters-data/player-hero-data.tres" id="2_ugm31"]
+[ext_resource type="PackedScene" uid="uid://dmu8e2ianqbh3" path="res://scenes/UI/skill_select_menu.tscn" id="3_2wmvw"]
 [ext_resource type="Resource" uid="uid://f6kxqkrw13hs" path="res://resources/characters-data/enemy-goblin-data.tres" id="3_o3k7m"]
+[ext_resource type="PackedScene" uid="uid://jkhq0o18wbtp" path="res://scenes/UI/target_selection_menu.tscn" id="4_ww1p6"]
 [ext_resource type="Script" uid="uid://ovtmfytgx4or" path="res://scenes/battle/battle_manager.gd" id="5_o3k7m"]
 [ext_resource type="Script" uid="uid://dulhbfmq1l0km" path="res://scenes/battle/battle_state_manager.gd" id="6_lbt8a"]
 
@@ -13,29 +16,6 @@ script = ExtResource("1_ugm31")
 [node name="BattleUI" type="CanvasLayer" parent="."]
 layer = 128
 
-[node name="ActionPanel" type="Panel" parent="BattleUI"]
-unique_name_in_owner = true
-offset_left = 33.0
-offset_top = 555.0
-offset_right = 233.0
-offset_bottom = 595.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="BattleUI/ActionPanel"]
-layout_mode = 0
-offset_right = 200.0
-offset_bottom = 40.0
-alignment = 1
-
-[node name="AttackButton" type="Button" parent="BattleUI/ActionPanel/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Attack"
-
-[node name="DefendButton" type="Button" parent="BattleUI/ActionPanel/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Defend"
-
 [node name="InfoLabel" type="RichTextLabel" parent="BattleUI"]
 unique_name_in_owner = true
 offset_left = 902.0
@@ -43,6 +23,18 @@ offset_top = -2.0
 offset_right = 1152.0
 offset_bottom = 198.0
 bbcode_enabled = true
+
+[node name="ActionMenu" parent="BattleUI" instance=ExtResource("2_cywj5")]
+offset_top = 557.0
+offset_bottom = 597.0
+
+[node name="SkillSelectMenu" parent="BattleUI" instance=ExtResource("3_2wmvw")]
+unique_name_in_owner = true
+visible = false
+
+[node name="TargetSelectionMenu" parent="BattleUI" instance=ExtResource("4_ww1p6")]
+unique_name_in_owner = true
+visible = false
 
 [node name="PlayerTeamArea" type="Node2D" parent="."]
 

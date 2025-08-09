@@ -30,7 +30,7 @@ func _ready():
 # 当前是否是玩家回合
 var is_player_turn: bool = false:
 	get:
-		return state_manager.BattleState.PLAYER_TURN
+		return state_manager.current_state == BattleStateManager.BattleState.PLAYER_TURN
 var battle_finished: bool = false # 战斗是否结束
 var is_victory: bool = false # 战斗结果是否为胜利
 
@@ -89,8 +89,19 @@ func player_defend():
 	if is_player_turn and not battle_finished:
 		player_select_action("defend", current_turn_character)
 
+func player_skill(skill_data: SkillData = null, targets: Array[Character] = []):
+	if is_player_turn and not battle_finished:
+		var target = null
+		for enemy in enemy_characters:
+			if enemy.character_data.current_hp > 0:
+				target = enemy;
+				break
+		if target:
+			player_select_action("skill", target, skill_data, targets)
+		
+
 # 处理玩家行动
-func player_select_action(action_type: String, target: Character = null):
+func player_select_action(action_type: String, target: Character = null, skill_data: SkillData = null, targets: Array[Character] = []):
 	if not is_player_turn or battle_finished:
 		return
 	print("玩家选择行动：", action_type)
@@ -114,6 +125,11 @@ func player_select_action(action_type: String, target: Character = null):
 		"defend":
 			if target and target is Character:
 				execute_defend(current_turn_character)
+		"skill":
+			var skill_targets: Array[Character] = targets
+			if skill_targets.is_empty():
+				skill_targets.append(target)
+			_execute_skill(current_turn_character, skill_targets, skill_data)
 		_:
 			push_error("未知行动类型: ", action_type)
 			return
@@ -123,7 +139,11 @@ func player_select_action(action_type: String, target: Character = null):
 		return # 战斗已结束
 	
 	state_manager.change_state(BattleStateManager.BattleState.TURN_END)
-	
+
+func _execute_skill(caster: Character, targets: Array[Character], skill_data: SkillData) -> void:
+	print(caster.character_data.character_name + "使用技能：" + skill_data.skill_name)
+	print(targets.size())
+
 # 执行攻击
 func execute_attack(attacker: Character, target: Character):
 	log_battle_info("[color=purple][战斗行动][/color] [color=orange][b]{0}[/b][/color] 攻击 [color=cyan][b]{1}[/b][/color]".format([attacker.character_data.character_name, target.character_data.character_name]))
@@ -186,6 +206,7 @@ func execute_enemy_ai() -> void:
 	if target:
 		log_battle_info("[color=orange][b]{0}[/b][/color] 选择攻击 [color=blue][b]{1}[/b][/color]".format([current_turn_character.character_data.character_name, target.character_data.character_name]))
 		execute_attack(current_turn_character, target)
+		is_player_turn = true
 	else:
 		log_battle_info("[color=red][错误][/color] 敌人找不到可攻击的目标")
 		
@@ -277,3 +298,24 @@ func _on_state_changed(_previous_state: BattleStateManager.BattleState, new_stat
 		BattleStateManager.BattleState.DEFEAT:
 			log_battle_info("[color=red][b]===== 战斗失败... =====[/b][/color]")
 			battle_ended.emit(false)
+
+# 获取有效的友方目标列表
+# include_self: 是否包括施法者自己
+func get_valid_ally_targets(include_self: bool = false) -> Array[Character]:
+	var valid_targets: Array[Character] = []
+	
+	for ally in player_characters:
+		if ally.is_alive() && (include_self || ally != current_turn_character):
+			valid_targets.append(ally)
+	
+	return valid_targets
+
+# 获取有效的敌方目标列表（过滤掉已倒下的角色）
+func get_valid_enemy_targets() -> Array[Character]:
+	var valid_targets: Array[Character] = []
+	
+	for enemy in enemy_characters:
+		if enemy.is_alive():
+			valid_targets.append(enemy)
+	
+	return valid_targets

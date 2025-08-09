@@ -25,7 +25,7 @@ var _is_defending: bool = false
 signal hp_changed(new_hp: int, max_hp: int)
 signal character_died()
 
-func _ready(): 
+func _ready():
 	if character_data:
 		initialize_from_data()
 	else:
@@ -43,16 +43,16 @@ func initialize_from_data():
 	pass
 
 func update_visual():
-	if name_label: 
+	if name_label:
 		name_label.text = character_data.character_name
-	if hp_label: 
+	if hp_label:
 		hp_label.text = "HP: " + str(character_data.current_hp) + "/" + str(character_data.max_hp)
 	if character_rect and character_data:
 		character_rect.color = character_data.color
 
 func _on_hp_changed(current_hp, max_hp):
 	if not hp_bar:
-		return;
+		return ;
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	
@@ -81,7 +81,7 @@ func take_damage(base_damage: int) -> int:
 		die()
 	return final_damage
 
-func set_defending(is_show: bool): 
+func set_defending(is_show: bool):
 	_is_defending = is_show
 	if is_show:
 		defense_indicator.show_indicator()
@@ -97,3 +97,7 @@ func die():
 # 回合开始时重置标记
 func reset_turn_flags():
 	set_defending(false)
+
+## 是否存活
+func is_alive() -> bool:
+	return character_data.current_hp > 0
