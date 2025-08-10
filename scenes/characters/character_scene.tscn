@@ -46,6 +46,25 @@ offset_bottom = 25.0
 text = "血量"
 horizontal_alignment = 1
 
+[node name="MPBar" type="ProgressBar" parent="Container"]
+unique_name_in_owner = true
+self_modulate = Color(0.106147, 0.0836, 0.76, 1)
+offset_left = 1.0
+offset_top = 171.0
+offset_right = 101.0
+offset_bottom = 198.0
+show_percentage = false
+
+[node name="MPLabel" type="Label" parent="Container/MPBar"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 101.0
+offset_bottom = 25.0
+text = "蓝量"
+horizontal_alignment = 1
+
 [node name="DefenseIndicator" parent="." instance=ExtResource("2_lv1ak")]
 unique_name_in_owner = true
 position = Vector2(2, 2)

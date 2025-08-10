@@ -39,7 +39,7 @@ visible = false
 [node name="PlayerTeamArea" type="Node2D" parent="."]
 
 [node name="CharacterScene" parent="PlayerTeamArea" instance=ExtResource("1_pu738")]
-position = Vector2(244, 339)
+position = Vector2(244, 340)
 character_data = ExtResource("2_ugm31")
 maximum_hp = 100
 

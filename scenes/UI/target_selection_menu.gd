@@ -41,11 +41,11 @@ func show_targets(targets: Array[Character]) -> void:
 	for i in range(targets.size()):
 		var character = targets[i]
 		if character:
-			var item_text = character.character_data.character_name + " (HP: " + str(character.character_data.current_hp) + "/" + str(character.character_data.max_hp) + ")"
+			var item_text = character.character_name + " (HP: " + str(character.current_hp) + "/" + str(character.max_hp) + ")"
 			target_list.add_item(item_text)
 			
 			# 如果目标已死亡，标记为不可选
-			if character.character_data.current_hp <= 0:
+			if character.current_hp <= 0:
 				target_list.set_item_disabled(i, true)
 				target_list.set_item_custom_fg_color(i, Color(0.5, 0.5, 0.5))
 	
@@ -69,7 +69,7 @@ func _on_target_item_activated(index: int) -> void:
 func _on_select_button_pressed() -> void:
 	if selected_target_index >= 0 and selected_target_index < available_targets.size():
 		var target = available_targets[selected_target_index]
-		if target and target.character_data.current_hp > 0:
+		if target and target.current_hp > 0:
 			target_selected.emit(target)
 			hide()
 

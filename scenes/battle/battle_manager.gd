@@ -11,6 +11,15 @@ signal turn_changed(character: Character)
 signal battle_ended(is_victory: bool)
 signal battle_info_logged(text: String)
 
+@export var heal_min_range: float = 0.95
+@export var heal_max_range: float = 1.05
+@export var heal_magic_coef: float = 1.0
+@export var magic_attack_coef: float = 0.8
+@export var magic_defend_coef: float = 0.5
+@export var magic_min_range: float = 0.9
+@export var magic_max_range: float = 1.1
+
+
 # 战斗参与者
 var player_characters: Array[Character] = []
 var enemy_characters: Array[Character] = []
@@ -39,14 +48,14 @@ func build_turn_queue():
 	# 清空当前队列
 	turn_queue.clear()
 	for character in player_characters:
-		if character.character_data.current_hp > 0:
+		if character.current_hp > 0:
 			turn_queue.append(character)
 			
 	for character in enemy_characters:
-		if character.character_data.current_hp > 0:
+		if character.current_hp > 0:
 			turn_queue.append(character)
 			
-	turn_queue.sort_custom(func(a, b): return a.character_data.speed > b.character_data.speed)
+	turn_queue.sort_custom(func(a, b): return a.speed > b.speed)
 	
 	log_battle_info("[color=yellow][战斗系统][/color] 回合队列已建立: [color=green][b]{0}[/b][/color] 个角色".format([turn_queue.size()]))
 
@@ -54,12 +63,12 @@ func build_turn_queue():
 func add_player_character(character: Character):
 	if not player_characters.has(character):
 		player_characters.append(character)
-		log_battle_info("[color=blue][玩家注册][/color] 添加角色: [color=cyan][b]{0}[/b][/color]".format([character.character_data.character_name]))
+		log_battle_info("[color=blue][玩家注册][/color] 添加角色: [color=cyan][b]{0}[/b][/color]".format([character.character_name]))
 
 func add_enemy_character(character: Character):
 	if not enemy_characters.has(character):
 		enemy_characters.append(character)
-		log_battle_info("[color=red][敌人注册][/color] 添加角色: [color=orange][b]{0}[/b][/color]".format([character.character_data.character_name]))
+		log_battle_info("[color=red][敌人注册][/color] 添加角色: [color=orange][b]{0}[/b][/color]".format([character.character_name]))
 	
 # 战斗相关
 func start_battle():
@@ -79,7 +88,7 @@ func player_attack():
 	if is_player_turn and not battle_finished:
 		var target = null
 		for enemy in enemy_characters:
-			if enemy.character_data.current_hp > 0:
+			if enemy.current_hp > 0:
 				target = enemy;
 				break
 		if target:
@@ -93,7 +102,7 @@ func player_skill(skill_data: SkillData = null, targets: Array[Character] = []):
 	if is_player_turn and not battle_finished:
 		var target = null
 		for enemy in enemy_characters:
-			if enemy.character_data.current_hp > 0:
+			if enemy.current_hp > 0:
 				target = enemy;
 				break
 		if target:
@@ -141,13 +150,131 @@ func player_select_action(action_type: String, target: Character = null, skill_d
 	state_manager.change_state(BattleStateManager.BattleState.TURN_END)
 
 func _execute_skill(caster: Character, targets: Array[Character], skill_data: SkillData) -> void:
-	print(caster.character_data.character_name + "使用技能：" + skill_data.skill_name)
+	print(caster.character_name + "使用技能：" + skill_data.skill_name)
 	print(targets.size())
+		# 技能的"前奏"——检查MP并消耗
+	if !check_and_consume_mp(caster, skill_data):
+		print("错误：MP不足，无法释放技能！")
+		return
+	match skill_data.effect_type:
+		SkillData.EffectType.DAMAGE:
+			_execute_damage_skill(caster, targets, skill_data)
+		SkillData.EffectType.HEAL:
+			_execute_heal_skill(caster, targets, skill_data)
+		_:
+			print("未处理的技能效果类型： ", skill_data.effect_type)
+	
+
+# MP检查和消耗
+func check_and_consume_mp(caster: Character, skill: SkillData) -> bool:
+	if caster.current_mp < skill.mp_cost:
+		print_rich("[color=red]魔力不足，法术施放失败！[/color]")
+		return false
+	
+	caster.use_mp(skill.mp_cost)
+	return true
+
+# 伤害类技能
+func _execute_damage_skill(caster: Character, targets: Array[Character], skill: SkillData):
+	for target in targets:
+		if target.current_hp <= 0:
+			continue
+		
+		# 计算基础伤害
+		var base_damage = _calculate_skill_damage(caster, target, skill)
+		
+		# 应用伤害
+		var damage_dealt = target.take_damage(base_damage)
+		
+		# 显示伤害数字
+		spawn_damage_number(target.global_position, damage_dealt, Color.RED)
+
+		print(target.character_name + " 受到 " + str(damage_dealt) + " 点伤害")
+
+func _calculate_skill_damage(caster: Character, target: Character, skill: SkillData) -> int:
+	# 基础伤害计算
+	var base_damage = skill.power + (caster.magic_attack * magic_attack_coef)
+	
+	# 考虑目标防御
+	var damage_after_defense = base_damage - (target.magic_defense * magic_defend_coef)
+	
+	# 加入随机浮动因素 (±10%)
+	var random_factor = randf_range(magic_min_range, magic_max_range)
+	var final_damage = damage_after_defense * random_factor
+	
+	# 确保伤害至少为1
+	return max(1, round(final_damage))
+
+# 治疗类技能
+func _execute_heal_skill(caster: Character, targets: Array[Character], skill: SkillData) -> void:
+	# 播放施法者的施法动画（可以与伤害技能不同，更温和）
+	_play_heal_cast_animation(caster)
+
+	# 等待短暂时间
+	await get_tree().create_timer(0.3).timeout
+
+	for target in targets:
+		if target.current_hp <= 0: # 不能治疗已死亡的角色
+			print("%s 已倒下，无法接受治疗。" % target.character_name)
+			continue
+		
+		# 计算治疗量
+		var healing = _calculate_skill_healing(caster, target, skill)
+		
+		# 播放治疗效果动画
+		_play_heal_effect(target)
+
+		# 应用治疗
+		var actual_healed = target.heal(healing)
+		
+		# 显示治疗数字
+		spawn_damage_number(target.global_position, actual_healed, Color.GREEN)
+
+		print_rich("[color=green]%s 恢复了 %d 点生命值！[/color]" % [target.character_name, actual_healed])
+
+## 播放施法动画
+func _play_heal_cast_animation(caster: Character) -> void:
+	_play_cast_animation(caster)
+
+## 播放施法动画
+func _play_cast_animation(caster: Character) -> void:
+	var tween = create_tween()
+	# 角色短暂发光效果
+	tween.tween_property(caster, "modulate", Color(1.5, 1.5, 1.5), 0.2)
+	tween.tween_property(caster, "modulate", Color(1, 1, 1), 0.2)
+	
+	# 这里可以播放施法音效
+	# AudioManager.play_sfx("spell_cast")
+
+func _calculate_skill_healing(caster: Character, _target: Character, skill: SkillData) -> int:
+	# 治疗量通常更依赖施法者的魔法攻击力
+	var base_healing = skill.power + (caster.magic_attack * heal_magic_coef)
+	
+	# 随机浮动 (±5%)
+	var random_factor = randf_range(heal_min_range, heal_max_range)
+	var final_healing = base_healing * random_factor
+	
+	return max(1, round(final_healing))
+
+# 治疗效果视觉反馈
+func _play_heal_effect(target: Character):
+	var tween = create_tween()
+	
+	# 目标变绿效果（表示恢复）
+	tween.tween_property(target, "modulate", Color(0.7, 1.5, 0.7), 0.2)
+	
+	# 上升的小动画，暗示"提升"
+	var original_pos = target.position
+	tween.tween_property(target, "position", original_pos - Vector2(0, 5), 0.2)
+	tween.tween_property(target, "position", original_pos, 0.1)
+	
+	# 恢复正常颜色
+	tween.tween_property(target, "modulate", Color(1, 1, 1), 0.2)
 
 # 执行攻击
 func execute_attack(attacker: Character, target: Character):
-	log_battle_info("[color=purple][战斗行动][/color] [color=orange][b]{0}[/b][/color] 攻击 [color=cyan][b]{1}[/b][/color]".format([attacker.character_data.character_name, target.character_data.character_name]))
-	var final_damage = target.take_damage(attacker.character_data.attack - target.character_data.defense)
+	log_battle_info("[color=purple][战斗行动][/color] [color=orange][b]{0}[/b][/color] 攻击 [color=cyan][b]{1}[/b][/color]".format([attacker.character_name, target.character_name]))
+	var final_damage = target.take_damage(attacker.attack - target.defense)
 	#显示伤害数字
 	spawn_damage_number(target.global_position, final_damage, Color.RED)
 	
@@ -159,7 +286,7 @@ func execute_defend(character: Character):
 	if character == null:
 		return
 		
-	log_battle_info("[color=purple][战斗行动][/color] [color=cyan][b]{0}[/b][/color] 选择[color=teal][防御][/color]，受到的伤害将减少".format([character.character_data.character_name]))
+	log_battle_info("[color=purple][战斗行动][/color] [color=cyan][b]{0}[/b][/color] 选择[color=teal][防御][/color]，受到的伤害将减少".format([character.character_name]))
 	character.set_defending(true)
 
 # 检查战斗结束条件
@@ -171,14 +298,14 @@ func check_battle_end_condition() -> bool:
 	# 检查玩家是否全部阵亡
 	var all_players_defeated = true
 	for player in player_characters:
-		if player.character_data.current_hp > 0:
+		if player.current_hp > 0:
 			all_players_defeated = false
 			break
 			
 	# 检查敌人是否全部阵亡
 	var all_enemies_defeated = true
 	for enemy in enemy_characters:
-		if enemy.character_data.current_hp > 0:
+		if enemy.current_hp > 0:
 			all_enemies_defeated = false
 			break
 			
@@ -199,12 +326,12 @@ func execute_enemy_ai() -> void:
 	# 简单的AI逻辑：总是攻击第一个存活的玩家角色
 	var target = null
 	for player in player_characters:
-		if player.character_data.current_hp > 0:
+		if player.current_hp > 0:
 			target = player
 			break
 			
 	if target:
-		log_battle_info("[color=orange][b]{0}[/b][/color] 选择攻击 [color=blue][b]{1}[/b][/color]".format([current_turn_character.character_data.character_name, target.character_data.character_name]))
+		log_battle_info("[color=orange][b]{0}[/b][/color] 选择攻击 [color=blue][b]{1}[/b][/color]".format([current_turn_character.character_name, target.character_name]))
 		execute_attack(current_turn_character, target)
 		is_player_turn = true
 	else:
@@ -261,7 +388,7 @@ func _on_state_changed(_previous_state: BattleStateManager.BattleState, new_stat
 				return
 				
 			current_turn_character = turn_queue.pop_front()
-			log_battle_info("[color=cyan][回合][/color] [color=orange][b]{0}[/b][/color] 的回合开始".format([current_turn_character.character_data.character_name]))
+			log_battle_info("[color=cyan][回合][/color] [color=orange][b]{0}[/b][/color] 的回合开始".format([current_turn_character.character_name]))
 			current_turn_character.reset_turn_flags()
 			# 根据角色类型决定下一个状态
 			var next_state = BattleStateManager.BattleState.PLAYER_TURN

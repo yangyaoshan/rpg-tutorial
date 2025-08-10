@@ -20,7 +20,7 @@ func _ready():
 	action_menu.skill_button.pressed.connect(func():
 		skill_select_menu.show_menu(
 			battle_manager.current_turn_character.character_data.skills,
-			battle_manager.current_turn_character.character_data.current_mp
+			battle_manager.current_turn_character.current_mp
 		)
 		
 		# battle_manager.player_skill()
@@ -72,7 +72,7 @@ func _on_battle_ended(is_win: bool):
 func _on_turn_changed(character: Character):
 	var is_player_turn = battle_manager.is_player_turn
 	show_action_ui(is_player_turn)
-	update_battle_info("{0} 的回合".format([character.character_data.character_name]))
+	update_battle_info("{0} 的回合".format([character.character_name]))
 
 # 找到角色
 func find_characters():
@@ -151,8 +151,6 @@ func _on_skill_selected(skill: SkillData):
 			update_battle_info("未处理的目标类型: " + str(skill.target_type))
 			_on_skill_selection_cancelled()
 
-	target_selection_menu.show_targets(battle_manager.enemy_characters)
-
 func _on_skill_selection_cancelled():
 	current_selected_skill = null
 
@@ -176,7 +174,7 @@ func _on_target_selection_cancelled():
 	skill_target = null
 	skill_select_menu.show_menu(
 			battle_manager.current_turn_character.character_data.skills,
-			battle_manager.current_turn_character.character_data.current_mp)
+			battle_manager.current_turn_character.current_mp)
 
 func _hide_all_menus():
 	pass
