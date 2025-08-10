@@ -1,21 +1,123 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=5 format=3 uid="uid://c88jwd6aaub3t"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=17 format=3 uid="uid://c88jwd6aaub3t"]
 
+[ext_resource type="Script" uid="uid://cxgqff4nrr3b5" path="res://scripts/resources/skill_attribute.gd" id="1_5hlyq"]
 [ext_resource type="Script" uid="uid://88hyr5offq07" path="res://scripts/resources/character-data.gd" id="1_gm6mb"]
 [ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="2_kcit7"]
 [ext_resource type="Resource" uid="uid://bofqvummenvgy" path="res://resources/skills/fire-ball.tres" id="3_utvw1"]
 [ext_resource type="Resource" uid="uid://1jpcnfpy751f" path="res://resources/skills/minor-heal.tres" id="4_4libw"]
+[ext_resource type="Script" uid="uid://dom8ur3six6bx" path="res://scripts/resources/skill_attribute_set.gd" id="9_hokhr"]
+
+[sub_resource type="Resource" id="Resource_4libw"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"AttackPower"
+display_name = "攻击力"
+description = ""
+base_value = 100.0
+min_value = inf_neg
+max_value = 999.0
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_leg28"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"CurrentHealth"
+display_name = "当前生命值"
+description = ""
+base_value = 100.0
+min_value = inf_neg
+max_value = 9999.0
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_7qhej"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"CurrentMana"
+display_name = "当前魔法值"
+description = ""
+base_value = 100.0
+min_value = inf_neg
+max_value = 9999.0
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_760rm"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"DefensePower"
+display_name = "防御力"
+description = ""
+base_value = 0.0
+min_value = inf_neg
+max_value = inf
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_gke4c"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"MagicAttack"
+display_name = "魔法攻击力"
+description = ""
+base_value = 10.0
+min_value = inf_neg
+max_value = 9999.0
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_o1dgd"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"MagicDefense"
+display_name = "魔法防御力"
+description = ""
+base_value = 5.0
+min_value = inf_neg
+max_value = 999.0
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_1w6ya"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"MaxHealth"
+display_name = "最大生命值"
+description = ""
+base_value = 100.0
+min_value = inf_neg
+max_value = 9999.0
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_5hlyq"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"MaxMana"
+display_name = "最大魔法值"
+description = ""
+base_value = 100.0
+min_value = inf_neg
+max_value = inf
+can_be_negative = false
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_10a07"]
+script = ExtResource("1_5hlyq")
+attribute_name = &"Speed"
+display_name = "速度"
+description = ""
+base_value = -50.0
+min_value = 50.0
+max_value = 999.0
+can_be_negative = true
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"
+
+[sub_resource type="Resource" id="Resource_vq3ah"]
+script = ExtResource("9_hokhr")
+attributes_to_initialize = Array[ExtResource("1_5hlyq")]([SubResource("Resource_4libw"), SubResource("Resource_leg28"), SubResource("Resource_7qhej"), SubResource("Resource_760rm"), SubResource("Resource_gke4c"), SubResource("Resource_o1dgd"), SubResource("Resource_1w6ya"), SubResource("Resource_5hlyq"), SubResource("Resource_10a07")])
+metadata/_custom_type_script = "uid://dom8ur3six6bx"
 
 [resource]
 script = ExtResource("1_gm6mb")
 character_name = "林月冥"
 description = "角色描述"
-max_hp = 100
-current_hp = 100
-max_mp = 50
-current_mp = 50
-attack = 10
-defense = 2
-speed = 7
+attribute_set_resource = SubResource("Resource_vq3ah")
+magic_attack = 10
+magic_defense = 10
 skills = Array[ExtResource("2_kcit7")]([ExtResource("3_utvw1"), ExtResource("4_4libw")])
 color = Color(0, 0, 1, 1)
 metadata/_custom_type_script = "uid://88hyr5offq07"

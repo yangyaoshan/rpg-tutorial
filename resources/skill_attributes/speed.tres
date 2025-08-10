@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillAttribute" load_steps=2 format=3 uid="uid://d0np2kb2p7hgu"]
+
+[ext_resource type="Script" uid="uid://cxgqff4nrr3b5" path="res://scripts/resources/skill_attribute.gd" id="1_n0frf"]
+
+[resource]
+script = ExtResource("1_n0frf")
+attribute_name = &"Speed"
+display_name = "速度"
+description = ""
+base_value = -50.0
+min_value = 50.0
+max_value = 999.0
+can_be_negative = true
+metadata/_custom_type_script = "uid://cxgqff4nrr3b5"

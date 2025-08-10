@@ -49,6 +49,7 @@ horizontal_alignment = 1
 [node name="MPBar" type="ProgressBar" parent="Container"]
 unique_name_in_owner = true
 self_modulate = Color(0.106147, 0.0836, 0.76, 1)
+layout_mode = 0
 offset_left = 1.0
 offset_top = 171.0
 offset_right = 101.0

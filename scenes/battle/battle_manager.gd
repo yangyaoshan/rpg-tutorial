@@ -274,7 +274,7 @@ func _play_heal_effect(target: Character):
 # 执行攻击
 func execute_attack(attacker: Character, target: Character):
 	log_battle_info("[color=purple][战斗行动][/color] [color=orange][b]{0}[/b][/color] 攻击 [color=cyan][b]{1}[/b][/color]".format([attacker.character_name, target.character_name]))
-	var final_damage = target.take_damage(attacker.attack - target.defense)
+	var final_damage = target.take_damage(attacker.attack_power - target.defense_power)
 	#显示伤害数字
 	spawn_damage_number(target.global_position, final_damage, Color.RED)
 	

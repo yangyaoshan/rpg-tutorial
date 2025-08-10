@@ -33,7 +33,7 @@ func _ready():
 	use_button.disabled = true
 
 ## 显示技能菜单
-func show_menu(character_skills: Array[SkillData], caster_mp: int) -> void:
+func show_menu(character_skills: Array[SkillData], caster_mp: float) -> void:
 	self.current_character_skills = character_skills
 	skill_list.clear()
 	skill_description.text = "选择一个技能以使用，或双击直接使用"
