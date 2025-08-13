@@ -130,7 +130,8 @@ func is_alive() -> bool:
 
 func use_mp(amount: int) -> bool:
 	if current_mp >= amount:
-		current_mp -= amount
+		# current_mp -= amount
+		active_attribute_set.modify_base_value(&"CurrentMana", current_mp - amount)
 		update_visual()
 		return true
 	return false

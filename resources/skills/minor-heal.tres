@@ -1,6 +1,18 @@
-[gd_resource type="Resource" script_class="SkillData" load_steps=2 format=3 uid="uid://1jpcnfpy751f"]
+[gd_resource type="Resource" script_class="SkillData" load_steps=4 format=3 uid="uid://1jpcnfpy751f"]
 
 [ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="1_4yj5e"]
+[ext_resource type="Script" uid="uid://ouuhjprel7ji" path="res://scripts/resources/skill_effect_data.gd" id="1_g4gt0"]
+
+[sub_resource type="Resource" id="Resource_luba7"]
+script = ExtResource("1_g4gt0")
+effect_type = 1
+visual_effect = ""
+sound_effect = ""
+damage_amount = 0
+damage_power_scale = 0.0
+heal_amount = 10
+heal_power_scale = 1.0
+metadata/_custom_type_script = "uid://ouuhjprel7ji"
 
 [resource]
 script = ExtResource("1_4yj5e")
@@ -8,7 +20,9 @@ skill_id = &"minor-heal"
 skill_name = "初级治疗"
 description = "回复一个目标20点生命值"
 mp_cost = 5
-effect_type = 1
 target_type = 6
-power = 10
+effects = Array[ExtResource("1_g4gt0")]([SubResource("Resource_luba7")])
+action_categories = Array[String](["any_action"])
+animation_name = &""
+cast_animation = &""
 metadata/_custom_type_script = "uid://dh0rtnsbdrr2v"

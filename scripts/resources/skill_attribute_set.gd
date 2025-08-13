@@ -95,7 +95,7 @@ func modify_base_value(attribute_name: StringName, modify_value: float, source: 
 	var attr: SkillAttribute = get_attribute(attribute_name)
 	if not attr: return false
 	
-	return set_base_value(attribute_name, attr.get_base_value() + modify_value, source)
+	return set_base_value(attribute_name, modify_value, source)
 
 ## 向指定属性应用一个Modifier
 func apply_modifier(modifier: SkillAttributeModifier) -> void:
