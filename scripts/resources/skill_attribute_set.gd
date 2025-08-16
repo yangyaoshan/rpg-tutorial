@@ -97,16 +97,45 @@ func modify_base_value(attribute_name: StringName, modify_value: float, source: 
 	
 	return set_base_value(attribute_name, modify_value, source)
 
+
+##  设置属性的当前值
+func set_current_value(attribute_name: StringName, new_current_value: float, source: Variant = null) -> bool:
+	var attr: SkillAttribute = get_attribute(attribute_name)
+	if not attr: return false
+
+	var old_current_value = attr.get_current_value()
+	var proposed_new_current_value = new_current_value
+
+	# 钩子：当前值变化前
+	var final_new_value = _pre_current_value_change(attr, old_current_value, proposed_new_current_value, source if source else "SetCurrent")
+	if typeof(final_new_value) == TYPE_FLOAT:
+		attr.current_value = final_new_value # 钩子可能再次修改（例如额外钳制）
+	elif typeof(final_new_value) == TYPE_BOOL and not final_new_value:
+		# 如果钩子阻止了这次当前值的变化，可能需要回滚或特殊处理，但通常不建议这么做
+		print("Current value change for %s was denied by _pre_current_value_change." % attribute_name)
+		return false # 变化被阻止
+
+	# 触发当前值变化钩子
+	_post_current_value_change(attr, old_current_value, attr.get_current_value(), source if source else "SetCurrent")
+	current_value_changed.emit(attr, old_current_value, attr.get_current_value(), source if source else "SetCurrent")
+
+	return true
+
+
 ## 向指定属性应用一个Modifier
-func apply_modifier(modifier: SkillAttributeModifier) -> void:
+func apply_modifier(modifier: SkillAttributeModifier, source_id: int = 0) -> void:
 	var attr: SkillAttribute = get_attribute(modifier.attribute_id)
 	if not attr or not modifier: return
 	# (可选) 可以在这里添加逻辑，如果Modifier已存在则如何处理 (例如基于source_id刷新或拒绝)
-	if attr.get_active_modifiers().has(modifier):
+	if attr._active_modifiers.has(modifier):
 		printerr("Modifier %s already exists for attribute %s." % [modifier, modifier.attribute_id])
 		return
 	
+	modifier.set_source(source_id)
 	attr.add_modifier_internal(modifier) # 添加到属性实例的列表
+	var proposed_new_current_value = attr.get_current_value()
+
+	set_current_value(modifier.attribute_id, proposed_new_current_value, source_id)
 
 ## 从指定属性移除一个Modifier (通过Modifier实例或其source_id)
 func remove_modifier(modifier_instance: SkillAttributeModifier) -> void:
@@ -119,16 +148,15 @@ func remove_modifier(modifier_instance: SkillAttributeModifier) -> void:
 	attr.remove_modifier_internal(modifier_instance)
 
 ## 通过来源ID移除匹配该ID的所有修改器
-func remove_modifiers_by_source_id(source_id: String) -> void:
-	if source_id.is_empty(): return
-
-	for attr: SkillAttribute in _initialized_attributes.values():
-		# 为了安全地在迭代中移除元素，我们从后往前遍历
-		var modifiers: Array[SkillAttributeModifier] = attr.get_active_modifiers()
-		for i in range(modifiers.size() - 1, -1, -1):
-			var modifier = modifiers[i]
+## 从source_id移除Modifier
+func remove_modifiers_by_source_id(source_id: int) -> void:
+	var modifiers_to_remove: Array = []
+	for attr in _initialized_attributes.values():
+		for modifier in attr.get_active_modifiers():
 			if modifier.source_id == source_id:
-				attr.remove_modifier_internal(modifier)
+				modifiers_to_remove.append(modifier)
+	for modifier in modifiers_to_remove:
+		remove_modifier(modifier)
 
 #region --- 钩子函数 (虚拟方法，由具体业务逻辑的AttributeSet子类重写) ---
 

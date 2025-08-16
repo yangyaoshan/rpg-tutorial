@@ -1,6 +1,8 @@
 extends Node
 class_name BattleManager
 
+## 主要用于回合流程的管理
+
 const DAMAGE_NUMBER_SCENE: PackedScene = preload("res://scenes/UI/damage_number.tscn")
 
 const BattleStateManager = preload("res://scenes/battle/battle_state_manager.gd")
@@ -230,7 +232,7 @@ func _execute_skill(caster: Character, custom_targets: Array[Character], skill_d
 	# 处理直接效果
 	var effect_results = {}
 	if not skill_data.effects.is_empty():
-		effect_results = await _apply_effects(skill_data.effects, caster, targets)
+		effect_results = await apply_effects(skill_data.effects, caster, targets)
 
 	# 合并结果
 	var final_results = {}
@@ -246,7 +248,7 @@ func _execute_skill(caster: Character, custom_targets: Array[Character], skill_d
 	return final_results
 
 # 应用多个效果
-func _apply_effects(effects: Array, source: Character, targets: Array) -> Dictionary:
+func apply_effects(effects: Array, source: Character, targets: Array) -> Dictionary:
 	var all_results = {}
 
 	for target in targets:
@@ -555,6 +557,7 @@ func _on_state_changed(_previous_state: BattleStateManager.BattleState, new_stat
 				# 战斗已结束，状态已在check_battle_end_condition中切换
 				return
 			
+			current_turn_character.process_active_statuses(self)
 			# 进入下一个角色的回合
 			state_manager.change_state(BattleStateManager.BattleState.TURN_START)
 			
@@ -596,6 +599,7 @@ func _init_effect_processors():
 	# 注册处理器
 	register_effect_processor(DamageEffectProcessor.new(self))
 	register_effect_processor(HealingEffectProcessor.new(self))
+	register_effect_processor(ApplyStatusProcessor.new(self))
 
 ## 注册效果处理器
 func register_effect_processor(processor: EffectProcessor):

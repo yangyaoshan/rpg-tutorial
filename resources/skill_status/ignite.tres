@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="SkillStatusData" load_steps=5 format=3 uid="uid://ciouykh3f60bb"]
+
+[ext_resource type="Script" uid="uid://ouuhjprel7ji" path="res://scripts/resources/skill_effect_data.gd" id="1_bxtjt"]
+[ext_resource type="Script" uid="uid://81didycpuq3" path="res://scripts/resources/skill_attribute_modifier.gd" id="1_oujun"]
+[ext_resource type="Script" uid="uid://u8l01ja8bqtu" path="res://scripts/resources/skill_status_data.gd" id="3_xyykp"]
+
+[sub_resource type="Resource" id="Resource_oujun"]
+script = ExtResource("1_bxtjt")
+effect_type = 0
+visual_effect = ""
+sound_effect = ""
+damage_amount = 5
+damage_power_scale = 1.0
+heal_amount = 0
+heal_power_scale = 0.0
+status_application_chance = 1.0
+status_duration_override = -1
+status_stacks_to_apply = 1
+dispel_types = Array[String]([])
+dispel_count = 1
+dispel_is_positive = false
+dispel_is_all = false
+special_type = "none"
+special_params = {}
+metadata/_custom_type_script = "uid://ouuhjprel7ji"
+
+[resource]
+script = ExtResource("3_xyykp")
+status_id = &"ignite"
+status_name = "点燃"
+description = "每回合收到火焰伤害。"
+status_type = 1
+duration = 3
+duration_type = 0
+max_stacks = 1
+stack_behavior = 1
+attribute_modifiers = Array[ExtResource("1_oujun")]([])
+initial_effects = Array[ExtResource("1_bxtjt")]([])
+ongoing_effects = Array[ExtResource("1_bxtjt")]([SubResource("Resource_oujun")])
+end_effects = Array[ExtResource("1_bxtjt")]([])
+overrides_states = Array[StringName]([])
+resisted_by_states = Array[StringName]([])
+restricted_action_categories = Array[StringName]([])
+metadata/_custom_type_script = "uid://u8l01ja8bqtu"
