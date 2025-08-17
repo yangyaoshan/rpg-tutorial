@@ -1,11 +1,12 @@
 extends Node2D
+class_name DamageNumber
 
-@onready var label : Label = $Label
+@onready var label: Label = $Label
 
 ## 向上浮动速度
-var float_speed : float = 50.0
+var float_speed: float = 50.0
 ## 显示持续时间
-var float_duration : float = 1.0
+var float_duration: float = 1.0
 var time_elapsed: float = 0.0
 func _process(delta: float) -> void:
 	if time_elapsed < float_duration:

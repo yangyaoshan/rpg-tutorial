@@ -1,49 +1,30 @@
-[gd_resource type="Resource" script_class="SkillData" load_steps=6 format=3 uid="uid://1jpcnfpy751f"]
+[gd_resource type="Resource" script_class="SkillData" load_steps=8 format=3 uid="uid://1jpcnfpy751f"]
 
 [ext_resource type="Script" uid="uid://dh0rtnsbdrr2v" path="res://scripts/resources/skill-data.gd" id="1_4yj5e"]
-[ext_resource type="Script" uid="uid://ouuhjprel7ji" path="res://scripts/resources/skill_effect_data.gd" id="1_g4gt0"]
+[ext_resource type="Script" uid="uid://ouuhjprel7ji" path="res://scripts/resources/skill_effect_data.gd" id="1_lmi0v"]
+[ext_resource type="Script" uid="uid://b8g8j5ukylc1j" path="res://scripts/resources/skill_effect_data/heal_effect_data.gd" id="2_lmi0v"]
 [ext_resource type="Resource" uid="uid://3p3rntuvpn" path="res://resources/skill_status/attack_up.tres" id="2_luba7"]
+[ext_resource type="Script" uid="uid://ca4wjwdu0nlka" path="res://scripts/resources/skill_effect_data/apply_status_effect_data.gd" id="3_i0iqm"]
 
-[sub_resource type="Resource" id="Resource_luba7"]
-script = ExtResource("1_g4gt0")
-effect_type = 1
+[sub_resource type="Resource" id="Resource_evfnm"]
+script = ExtResource("2_lmi0v")
+heal_amount = 10
+heal_power_scale = 0.5
 visual_effect = ""
 sound_effect = ""
-damage_amount = 0
-damage_power_scale = 0.0
-heal_amount = 0
-heal_power_scale = 1.0
+target_override = "none"
+metadata/_custom_type_script = "uid://b8g8j5ukylc1j"
+
+[sub_resource type="Resource" id="Resource_6g057"]
+script = ExtResource("3_i0iqm")
+status_to_apply = ExtResource("2_luba7")
 status_application_chance = 1.0
 status_duration_override = -1
 status_stacks_to_apply = 1
-dispel_types = Array[String]([])
-dispel_count = 1
-dispel_is_positive = false
-dispel_is_all = false
-special_type = "none"
-special_params = {}
-metadata/_custom_type_script = "uid://ouuhjprel7ji"
-
-[sub_resource type="Resource" id="Resource_fnokl"]
-script = ExtResource("1_g4gt0")
-effect_type = 3
 visual_effect = ""
 sound_effect = ""
-damage_amount = 0
-damage_power_scale = 1.0
-heal_amount = 0
-heal_power_scale = 0.5
-status_to_apply = ExtResource("2_luba7")
-status_application_chance = 1.0
-status_duration_override = 3
-status_stacks_to_apply = 1
-dispel_types = Array[String]([])
-dispel_count = 1
-dispel_is_positive = false
-dispel_is_all = false
-special_type = "none"
-special_params = {}
-metadata/_custom_type_script = "uid://ouuhjprel7ji"
+target_override = "none"
+metadata/_custom_type_script = "uid://ca4wjwdu0nlka"
 
 [resource]
 script = ExtResource("1_4yj5e")
@@ -52,7 +33,7 @@ skill_name = "初级治疗"
 description = "回复一个目标20点生命值"
 mp_cost = 5
 target_type = 6
-effects = Array[ExtResource("1_g4gt0")]([SubResource("Resource_luba7"), SubResource("Resource_fnokl")])
+effects = Array[ExtResource("1_lmi0v")]([SubResource("Resource_evfnm"), SubResource("Resource_6g057")])
 action_categories = Array[String](["any_action"])
 animation_name = &""
 cast_animation = &""

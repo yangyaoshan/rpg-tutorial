@@ -69,10 +69,12 @@ func remove_modifier_internal(modifier: SkillAttributeModifier) -> void:
 ## (由AttributeSet调用) 设置基础值
 func set_base_value_internal(new_base_value: float) -> void:
 	base_value = new_base_value
+	print("set_base_value_internal --- ", attribute_name, " --- ", new_base_value)
 	_recalculate_current_value()
 
 ## 获取当前计算出的值
 func get_current_value() -> float:
+	print("get_current_value", attribute_name, " --- ", current_value)
 	return current_value
 
 ## 获取基础值
@@ -126,5 +128,6 @@ func _recalculate_current_value() -> bool:
 
 	# 更新current_value
 	current_value = clamped_value
-	
+
+	print("_recalculate_current_value --- ", attribute_name, " --- ", current_value)
 	return current_value != previous_current_value

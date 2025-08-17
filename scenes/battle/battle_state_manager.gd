@@ -32,3 +32,6 @@ func change_state(new_state: BattleState):
 	
 	# 打印日志并发出信号
 	state_changed.emit(previous_state, current_state)
+
+func is_in_state(state):
+	return current_state == state

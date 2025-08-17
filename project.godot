@@ -15,6 +15,10 @@ run/main_scene="uid://evvpyby52oj1"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SkillSystem="*res://scripts/autoload/skill_system.gd"
+
 [rendering]
 
 renderer/rendering_method="mobile"
